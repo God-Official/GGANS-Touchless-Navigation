@@ -45,7 +45,7 @@ pip3 install mediapipe tensorflow tensorflow-lite
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 
-git clone <your-repo-url>
+git clone https://github.com/God-Official/GGANS-Touchless-Navigation.git
 
 cd ~/ros2_ws
 colcon build --symlink-install
