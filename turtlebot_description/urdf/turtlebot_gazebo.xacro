@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="turtlebot3">
+
+  <!-- =======================
+       BASE & WHEEL MATERIALS
+  ======================== -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="wheel_left_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="wheel_right_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="caster_back_right_link">
+    <material>Gazebo/White</material>
+    <mu1 value="0.001"/>
+    <mu2 value="0.001"/>
+  </gazebo>
+
+  <gazebo reference="caster_back_left_link">
+    <material>Gazebo/White</material>
+    <mu1 value="0.001"/>
+    <mu2 value="0.001"/>
+  </gazebo>
+
+  <!-- =======================
+       DIFF DRIVE PLUGIN
+  ======================== -->
+  <gazebo>
+    <plugin filename="libignition-gazebo-diff-drive-system.so" name="ignition::gazebo::systems::DiffDrive">
+      <left_joint>wheel_left_joint</left_joint>
+      <right_joint>wheel_right_joint</right_joint>
+      <wheel_separation>0.287</wheel_separation>
+      <wheel_radius>0.033</wheel_radius>
+      <topic>cmd_vel</topic>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin
+      filename="ignition-gazebo-odometry-publisher-system"
+      name="ignition::gazebo::systems::OdometryPublisher">
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <odom_topic>/odom</odom_topic>
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+      <tf_topic>/odom/tf</tf_topic>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
+      name="ignition::gazebo::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+    </plugin>
+  </gazebo>
+
+  <!-- =======================
+       IMU SENSOR
+  ======================== -->
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>1</always_on>
+      <update_rate>1</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+      <ignition_frame_id>imu_link</ignition_frame_id>
+    </sensor>
+  </gazebo>
+
+  <!-- =======================
+       LIDAR SENSOR
+  ======================== -->
+  <gazebo reference="base_scan">
+    <sensor name="laser" type="gpu_lidar">
+      <pose> 0 0 0 0 0 0 </pose>
+      <visualize>false</visualize>
+      <update_rate>10</update_rate>            
+      <lidar>
+        <scan>
+        <horizontal>
+          <samples>360</samples>
+          <min_angle>-3.14</min_angle>
+          <max_angle>3.14</max_angle>
+        </horizontal>
+        </scan>
+        <range>
+          <min>0.3</min>
+          <max>12</max>
+        </range>
+      </lidar>
+      <topic>scan</topic>
+      <ignition_frame_id>base_scan</ignition_frame_id>
+    </sensor>
+  </gazebo>
+
+  <!-- =======================
+       CAMERA SENSOR
+  ======================== -->
+  <gazebo reference="camera_link">
+  <material>Gazebo/Red</material>
+
+  <sensor name="camera" type="rgbd_camera">
+    <pose> 0 0 0 0 0 0</pose>
+    <always_on>true</always_on>
+    <update_rate>10</update_rate>
+    <visualize>true</visualize>
+
+    <camera>
+      <horizontal_fov>1.089</horizontal_fov>
+      <image>
+        <width>640</width>
+        <height>480</height>
+        <format>R8G8B8</format> <!-- Ignition uses R8G8B8 -->
+      </image>
+      <clip>
+        <near>0.05</near>
+        <far>8.0</far>
+      </clip>
+    </camera>
+
+    <!-- Optional: enable depth output -->
+    <depth_camera>
+      <clip>
+        <near>0.05</near>
+        <far>8.0</far>
+      </clip>
+    </depth_camera>
+
+    <!-- Ignition topics -->
+    <topic>camera</topic>
+    <depth_image_topic>camera/depth_image</depth_image_topic>
+    <camera_info_topic>camera/camera_info</camera_info_topic>
+    <points_topic>camera/points</points_topic>
+
+    <!-- Frame name -->
+    <ignition_frame_id>camera_link_optical</ignition_frame_id>
+  </sensor>
+</gazebo>
+
+
+  <!-- <gazebo>
+      <plugin name="ignition::gazebo::systems::Sensors" filename="libignition-gazebo-sensors-system.so"> </plugin>
+  </gazebo> -->
+
+</robot>
